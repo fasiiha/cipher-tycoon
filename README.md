@@ -1,40 +1,127 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# Cipher Tycoon - The Dark Web Challenge
 
-## Getting Started
+## Overview
 
-First, run the development server:
+Cipher Tycoon is a text-based hacking simulation game where players take on various hacking missions, earn virtual cryptocurrency, upgrade their hacking tools, and compete on leaderboards. Built using **Next.js** for the frontend, **Golang** for the backend, and **Supabase** as the database, this game is designed to be simple, interactive, and backend-focused.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Features
+
+- **User Authentication**: GitHub OAuth login using Supabase.
+- **Mission System**: Players can take on hacking missions and earn virtual currency.
+- **Database Integration**: User data, missions, and leaderboards are stored in Supabase.
+- **Real-Time Updates**: Fetch and update data dynamically.
+- **Leaderboard**: Display top hackers based on earnings.
+
+## Tech Stack
+
+- **Frontend**: Next.js (React, Tailwind CSS for styling)
+- **Backend**: Golang (Gin or Fiber framework)
+- **Database**: Supabase (PostgreSQL, real-time subscriptions)
+- **Authentication**: Supabase Auth (GitHub OAuth)
+- **State Management**: React hooks
+
+## Folder Structure
+
+```
+/cipher-tycoon
+ ├── /frontend           # Next.js frontend
+ │    ├── /components       # Reusable UI components
+ │    ├── /pages            # Next.js pages
+ │    ├── /styles           # CSS styles (Tailwind)
+ │    ├── package.json      # Frontend dependencies
+ ├── /backend            # Golang backend
+ │    ├── /handlers         # API handlers
+ │    ├── /models           # Data models
+ │    ├── /routes           # API routes
+ │    ├── /main.go          # Main server entry point
+ ├── /database           # Supabase setup
+ ├── .env.local          # Environment variables (Supabase credentials)
+ ├── README.md           # Documentation
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Installation & Setup
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+### Prerequisites
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+- Node.js installed
+- Golang installed
+- Supabase account & project setup
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+### 1. Clone the Repository
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+git clone https://github.com/fasiiha/cipher-tycoon.git
+cd cipher-tycoon
+```
 
-## Learn More
+### 2. Setup Backend (Golang)
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+cd backend
+ go mod tidy
+ go run main.go
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+### 3. Setup Frontend (Next.js)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+cd frontend
+npm install
+```
 
-## Deploy on Vercel
+### 4. Configure Environment Variables
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Create a `.env.local` file in the frontend folder and add your Supabase credentials:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+Create a `.env` file in the backend folder and add:
+
+```env
+SUPABASE_URL=your_supabase_url
+SUPABASE_SECRET_KEY=your_supabase_service_role_key
+```
+
+### 5. Run the Development Server
+
+#### Start Backend
+
+```bash
+cd backend
+ go run main.go
+```
+
+#### Start Frontend
+
+```bash
+cd frontend
+npm run dev
+```
+
+Visit `http://localhost:3000` to play the game.
+
+## Future Enhancements
+
+- Add real-time player-vs-player (PvP) hacking battles.
+- Implement in-game purchases (crypto-based economy).
+- Introduce AI-based hacking challenges.
+- Improve UI with animations and better styling.
+
+## License
+
+This project is open-source and available under the **MIT License**.
+
+## Contributions
+
+Contributions are welcome! Feel free to submit a PR or open an issue.
+
+## Contact
+
+For any queries, reach out to [fasihaa.arshad@example.com] or create an issue on GitHub.
+
+---
+
+Happy Hacking! 🚀
