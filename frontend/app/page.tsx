@@ -1,6 +1,6 @@
-import Link from "next/link";
-import { Terminal, ChevronRight, Shield, Server, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ChevronRight, Server, Shield, Terminal, Users } from "lucide-react";
+import Link from "next/link";
 
 export default function Home() {
   return (
