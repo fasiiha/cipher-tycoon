@@ -29,7 +29,7 @@ Cipher Tycoon is a text-based hacking simulation game where players take on vari
  │    ├── /pages            # Next.js pages
  │    ├── /styles           # CSS styles (Tailwind)
  │    ├── package.json      # Frontend dependencies
- ├── /backend            # Golang backend
+ ├── /api            # Golang backend
  │    ├── /handlers         # API handlers
  │    ├── /models           # Data models
  │    ├── /routes           # API routes
