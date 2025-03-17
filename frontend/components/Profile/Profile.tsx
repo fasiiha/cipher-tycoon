@@ -346,7 +346,7 @@ export default function Profile() {
                               <Progress
                                 value={achievement.progress}
                                 className="h-1 bg-green-950"
-                                indicatorclassname="bg-green-500"
+                                indicatorClassName="bg-green-500"
                               />
                             </div>
                           )}

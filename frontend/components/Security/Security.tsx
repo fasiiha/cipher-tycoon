@@ -360,7 +360,7 @@ export default function Security() {
                     <Progress
                       value={scanProgress}
                       className="h-1 bg-green-950"
-                      indicatorclassname="bg-green-500"
+                      indicatorClassName="bg-green-500"
                     />
                   )}
 
@@ -483,7 +483,7 @@ export default function Security() {
                                   <Progress
                                     value={system.effectiveness}
                                     className="h-1 bg-green-950"
-                                    indicatorclassname="bg-green-500"
+                                    indicatorClassName="bg-green-500"
                                   />
                                 </div>
                               )}

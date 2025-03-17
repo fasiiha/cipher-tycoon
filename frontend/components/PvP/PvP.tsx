@@ -348,7 +348,7 @@ export default function PvP() {
                       <Progress
                         value={attackProgress}
                         className="h-2 bg-green-950"
-                        indicatorclassname="bg-red-500"
+                        indicatorClassName="bg-red-500"
                       />
                     </div>
 

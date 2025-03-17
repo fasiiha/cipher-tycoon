@@ -237,7 +237,7 @@ export default function Dashboard() {
               <Progress
                 value={serverStatus.cpu}
                 className="h-1 bg-green-950"
-                indicatorclassname="bg-green-500"
+                indicatorClassName="bg-green-500"
               />
 
               <div className="flex items-center justify-between">
@@ -247,7 +247,7 @@ export default function Dashboard() {
               <Progress
                 value={serverStatus.memory}
                 className="h-1 bg-green-950"
-                indicatorclassname="bg-green-500"
+                indicatorClassName="bg-green-500"
               />
 
               <div className="flex items-center justify-between">
@@ -257,7 +257,7 @@ export default function Dashboard() {
               <Progress
                 value={serverStatus.network}
                 className="h-1 bg-green-950"
-                indicatorclassname="bg-green-500"
+                indicatorClassName="bg-green-500"
               />
 
               <div className="flex items-center justify-between">
@@ -267,7 +267,7 @@ export default function Dashboard() {
               <Progress
                 value={serverStatus.security}
                 className="h-1 bg-green-950"
-                indicatorclassname="bg-green-500"
+                indicatorClassName="bg-green-500"
               />
             </div>
           </div>
@@ -390,7 +390,7 @@ export default function Dashboard() {
                       <Progress
                         value={activeMission.progress}
                         className="h-2 bg-green-950"
-                        indicatorclassname="bg-green-500"
+                        indicatorClassName="bg-green-500"
                       />
                     </div>
 

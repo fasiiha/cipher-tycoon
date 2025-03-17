@@ -4,6 +4,14 @@
 
 Cipher Tycoon is a text-based hacking simulation game where players take on various hacking missions, earn virtual cryptocurrency, upgrade their hacking tools, and compete on leaderboards. Built using **Next.js** for the frontend, **Golang** for the backend, and **Supabase** as the database, this game is designed to be simple, interactive, and backend-focused.
 
+Fiber (a fast Golang web framework)
+Gorm (ORM) with Supabase Postgres
+JWT for authentication
+Context API in Next.js for managing authentication state
+Nextjs for frontend
+GoLang for backend
+supabase for database
+
 ## Features
 
 - **User Authentication**: GitHub OAuth login using Supabase.

@@ -335,7 +335,7 @@ export default function Upgrades() {
                     <Progress
                       value={40}
                       className="h-2 bg-green-950"
-                      indicatorclassname="bg-blue-500"
+                      indicatorClassName="bg-blue-500"
                     />
                   </div>
 
@@ -352,7 +352,7 @@ export default function Upgrades() {
                     <Progress
                       value={20}
                       className="h-2 bg-green-950"
-                      indicatorclassname="bg-blue-500"
+                      indicatorClassName="bg-blue-500"
                     />
                   </div>
 
@@ -369,7 +369,7 @@ export default function Upgrades() {
                     <Progress
                       value={20}
                       className="h-2 bg-green-950"
-                      indicatorclassname="bg-green-500"
+                      indicatorClassName="bg-green-500"
                     />
                   </div>
 
@@ -386,7 +386,7 @@ export default function Upgrades() {
                     <Progress
                       value={20}
                       className="h-2 bg-green-950"
-                      indicatorclassname="bg-yellow-500"
+                      indicatorClassName="bg-yellow-500"
                     />
                   </div>
                 </div>
@@ -510,7 +510,7 @@ function UpgradeCard({
             <Progress
               value={(upgrade.level / upgrade.maxLevel) * 100}
               className="h-1 bg-green-950"
-              indicatorclassname={`${
+              indicatorClassName={`${
                 upgrade.category === "hardware"
                   ? "bg-blue-500"
                   : upgrade.category === "software"
