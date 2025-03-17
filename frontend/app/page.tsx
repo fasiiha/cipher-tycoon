@@ -1,3 +1,4 @@
+import LandingNavbar from "@/components/LandingNavbar";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, Server, Shield, Terminal, Users } from "lucide-react";
 import Link from "next/link";
@@ -5,34 +6,7 @@ import Link from "next/link";
 export default function Home() {
   return (
     <div className="flex min-h-screen flex-col bg-black text-green-500">
-      <header className="border-b border-green-900/50 bg-black/90 backdrop-blur supports-[backdrop-filter]:bg-black/50">
-        <div className="container flex h-14 items-center">
-          <div className="flex items-center space-x-2">
-            <Terminal className="h-6 w-6 text-green-500" />
-            <span className="font-mono text-xl font-bold">HACKER TYCOON</span>
-          </div>
-
-          <nav className="ml-auto flex items-center space-x-4">
-            <Link href="#" className="text-sm font-medium hover:text-green-400">
-              About
-            </Link>
-            <Link href="#" className="text-sm font-medium hover:text-green-400">
-              Features
-            </Link>
-            <Link href="#" className="text-sm font-medium hover:text-green-400">
-              Community
-            </Link>
-            <Link href="/dashboard">
-              <Button
-                variant="outline"
-                className="border-green-900 bg-green-950/30 text-green-400 hover:bg-green-950 hover:text-green-300"
-              >
-                Play Now
-              </Button>
-            </Link>
-          </nav>
-        </div>
-      </header>
+      <LandingNavbar />
 
       <main className="flex-1">
         {/* Hero Section */}
@@ -60,13 +34,15 @@ export default function Home() {
                     Play Now
                     <ChevronRight className="ml-2 h-4 w-4" />
                   </Button>
+                </Link>{" "}
+                <Link href="/how-to-play">
+                  <Button
+                    variant="outline"
+                    className="w-full border-green-600 text-green-500 hover:bg-green-950 hover:text-green-400 sm:w-auto"
+                  >
+                    How to Play
+                  </Button>
                 </Link>
-                <Button
-                  variant="outline"
-                  className="w-full border-green-600 text-green-500 hover:bg-green-950 hover:text-green-400 sm:w-auto"
-                >
-                  How to Play
-                </Button>
               </div>
 
               <div className="relative mx-auto mt-12 aspect-video w-full max-w-4xl overflow-hidden rounded-lg border border-green-900/50 bg-black/80 shadow-[0_0_15px_rgba(0,255,0,0.15)]">
@@ -79,7 +55,7 @@ export default function Home() {
                       <p>&gt; Initializing system...</p>
                       <p>&gt; Connecting to secure server...</p>
                       <p>&gt; Connection established.</p>
-                      <p>&gt; Welcome to Hacker Tycoon Terminal v3.1.4</p>
+                      <p>&gt; Welcome to Cipher Tycoon Terminal v3.1.4</p>
                       <p>&gt; Loading game environment...</p>
                       <p className="animate-pulse">&gt; _</p>
                     </div>
@@ -208,7 +184,7 @@ export default function Home() {
             </div>
 
             <div className="text-xs text-green-600">
-              &copy; {new Date().getFullYear()} Hacker Tycoon. All rights
+              &copy; {new Date().getFullYear()} Cipher Tycoon. All rights
               reserved.
             </div>
           </div>

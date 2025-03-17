@@ -4,15 +4,11 @@ import type React from "react";
 
 import {
   AlertTriangle,
-  Award,
   Clock,
-  Cpu,
   DollarSign,
-  LogOut,
   Server,
   Shield,
   Terminal,
-  User,
   Wifi,
   Zap,
 } from "lucide-react";
@@ -30,14 +26,8 @@ import {
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import Navbar from "../Navbar";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -45,7 +35,7 @@ export default function Dashboard() {
     "Initializing system...",
     "Connecting to secure server...",
     "Connection established.",
-    "Welcome to Hacker Tycoon Terminal v3.1.4",
+    "Welcome to Cipher Tycoon Terminal v3.1.4",
     "Type 'help' for available commands.",
     "> _",
   ]);
@@ -227,114 +217,7 @@ export default function Dashboard() {
   return (
     <div className="flex min-h-screen flex-col bg-black text-green-500">
       {/* Header/Navigation */}
-      <header className="border-b border-green-900/50 bg-black/90 backdrop-blur supports-[backdrop-filter]:bg-black/50">
-        <div className="flex h-14 items-center px-4">
-          <div className="flex items-center space-x-2">
-            <Terminal className="h-6 w-6 text-green-500" />
-            <span className="font-mono text-xl font-bold">HACKER TYCOON</span>
-          </div>
-
-          <nav className="ml-auto flex items-center space-x-1">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="text-green-500 hover:bg-green-950 hover:text-green-400"
-                  >
-                    <Server className="h-5 w-5" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Missions</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="text-green-500 hover:bg-green-950 hover:text-green-400"
-                  >
-                    <Cpu className="h-5 w-5" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Upgrades</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="text-green-500 hover:bg-green-950 hover:text-green-400"
-                  >
-                    <Shield className="h-5 w-5" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Security</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="text-green-500 hover:bg-green-950 hover:text-green-400"
-                  >
-                    <Award className="h-5 w-5" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Leaderboard</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="text-green-500 hover:bg-green-950 hover:text-green-400"
-                  >
-                    <User className="h-5 w-5" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Profile</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-
-            <Separator
-              orientation="vertical"
-              className="mx-1 h-6 bg-green-900/50"
-            />
-
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-green-500 hover:bg-green-950 hover:text-green-400"
-            >
-              <LogOut className="h-5 w-5" />
-            </Button>
-          </nav>
-        </div>
-      </header>
+      <Navbar />
 
       {/* Main Content */}
       <main className="flex flex-1 flex-col md:flex-row">

@@ -6,7 +6,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Hacker Tycoon - The Dark Web Challenge",
+  title: "Cipher Tycoon - The Dark Web Challenge",
   description:
     "A text-based hacking simulation game with real-time multiplayer elements",
   generator: "v0.dev",
