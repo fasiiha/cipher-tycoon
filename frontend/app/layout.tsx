@@ -9,7 +9,7 @@ export const metadata = {
   title: "Cipher Tycoon - The Dark Web Challenge",
   description:
     "A text-based hacking simulation game with real-time multiplayer elements",
-  generator: "v0.dev",
+  // generator: "v0.dev",
 };
 
 export default function RootLayout({

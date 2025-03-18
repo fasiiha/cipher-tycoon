@@ -30,7 +30,7 @@ func ConnectDB() {
 		log.Fatal("❌ Failed to connect to database:", err)
 	}
 
-	DB = db // ✅ This ensures DB is initialized
+	DB = db 
 
 	fmt.Println("✅ Database connected and migrated successfully")
 }

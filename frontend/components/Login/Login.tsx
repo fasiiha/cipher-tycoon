@@ -1,43 +1,68 @@
 "use client";
 
-import type React from "react";
-
-import { Eye, EyeOff, Terminal, Wallet } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { login, signup } from "@/lib/authApi";
+import { Eye, EyeOff, Terminal, Wallet } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import type React from "react";
+import { useState } from "react";
 
 export default function Login() {
   const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const [newUsername, setNewUsername] = useState("");
+  const [newEmail, setNewEmail] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setError("");
+    try {
+      const res = await login(email, password);
 
-    // Simulate login process
-    setTimeout(() => {
+      if (res.token) {
+        localStorage.setItem("token", res.token);
+        router.push("/dashboard");
+      } else {
+        setError(res.error || "Login failed");
+      }
+    } catch (err) {
+      setError("Something went wrong!");
+    } finally {
       setIsLoading(false);
-      router.push("/dashboard");
-    }, 1500);
+    }
   };
 
-  const handleSignup = (e: React.FormEvent) => {
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setError("");
 
-    // Simulate signup process
-    setTimeout(() => {
+    try {
+      const res = await signup(newUsername, newEmail, newPassword);
+
+      if (res.success) {
+        router.push("/dashboard");
+      } else {
+        setError(res.error || "Signup failed");
+      }
+    } catch (err) {
+      setError("Something went wrong!");
+    } finally {
       setIsLoading(false);
-      router.push("/dashboard");
-    }, 1500);
+    }
   };
 
   const handleWeb3Login = () => {
@@ -84,11 +109,14 @@ export default function Login() {
               <TabsContent value="login" className="p-6">
                 <form onSubmit={handleLogin} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="username">Username</Label>
+                    <Label htmlFor="email">Email</Label>
                     <Input
-                      id="username"
-                      placeholder="Enter your username"
+                      id="email"
+                      type="email"
+                      placeholder="Enter your email"
                       required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                       className="border-green-900 bg-black text-green-400 focus-visible:ring-green-500"
                     />
                   </div>
@@ -109,6 +137,8 @@ export default function Login() {
                         type={showPassword ? "text" : "password"}
                         placeholder="Enter your password"
                         required
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                         className="border-green-900 bg-black pr-10 text-green-400 focus-visible:ring-green-500"
                       />
                       <button
@@ -160,6 +190,8 @@ export default function Login() {
                       id="new-username"
                       placeholder="Choose a username"
                       required
+                      value={newUsername}
+                      onChange={(e) => setNewUsername(e.target.value)}
                       className="border-green-900 bg-black text-green-400 focus-visible:ring-green-500"
                     />
                   </div>
@@ -167,10 +199,12 @@ export default function Login() {
                   <div className="space-y-2">
                     <Label htmlFor="email">Email</Label>
                     <Input
-                      id="email"
+                      id="new-email"
                       type="email"
                       placeholder="Enter your email"
                       required
+                      value={newEmail}
+                      onChange={(e) => setNewEmail(e.target.value)}
                       className="border-green-900 bg-black text-green-400 focus-visible:ring-green-500"
                     />
                   </div>
@@ -183,6 +217,8 @@ export default function Login() {
                         type={showPassword ? "text" : "password"}
                         placeholder="Create a password"
                         required
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
                         className="border-green-900 bg-black pr-10 text-green-400 focus-visible:ring-green-500"
                       />
                       <button
