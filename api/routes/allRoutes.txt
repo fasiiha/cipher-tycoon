@@ -1,0 +1,438 @@
+### Users Table
+
+sql
+CREATE TABLE users (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    username VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    avatar_url VARCHAR(255),
+    bio TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    last_login TIMESTAMP WITH TIME ZONE,
+    is_active BOOLEAN DEFAULT TRUE,
+    is_admin BOOLEAN DEFAULT FALSE,
+    two_factor_enabled BOOLEAN DEFAULT FALSE,
+    two_factor_secret VARCHAR(255),
+    wallet_address VARCHAR(255),
+    reset_token VARCHAR(255),
+    reset_token_expires TIMESTAMP WITH TIME ZONE
+);
+
+
+### UserStats Table
+
+sql
+CREATE TABLE user_stats (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    level INTEGER DEFAULT 1,
+    experience INTEGER DEFAULT 0,
+    crypto_balance INTEGER DEFAULT 1000,
+    reputation INTEGER DEFAULT 0,
+    missions_completed INTEGER DEFAULT 0,
+    missions_failed INTEGER DEFAULT 0,
+    pvp_wins INTEGER DEFAULT 0,
+    pvp_losses INTEGER DEFAULT 0,
+    attack_success_rate INTEGER DEFAULT 0,
+    defense_success_rate INTEGER DEFAULT 0,
+    total_upgrades INTEGER DEFAULT 0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+
+### Missions Table
+
+sql
+CREATE TABLE missions (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    title VARCHAR(100) NOT NULL,
+    description TEXT NOT NULL,
+    difficulty VARCHAR(20) NOT NULL CHECK (difficulty IN ('Easy', 'Medium', 'Hard', 'Extreme')),
+    type VARCHAR(20) NOT NULL CHECK (type IN ('Legal', 'Illegal')),
+    base_reward INTEGER NOT NULL,
+    time_required INTEGER NOT NULL, -- in seconds
+    min_level INTEGER DEFAULT 1,
+    success_rate INTEGER DEFAULT 70, -- base success rate percentage
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+
+### UserMissions Table
+
+sql
+CREATE TABLE user_missions (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    mission_id UUID NOT NULL REFERENCES missions(id) ON DELETE CASCADE,
+    status VARCHAR(20) NOT NULL CHECK (status IN ('In Progress', 'Completed', 'Failed', 'Aborted')),
+    started_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    completed_at TIMESTAMP WITH TIME ZONE,
+    reward_earned INTEGER,
+    experience_gained INTEGER,
+    UNIQUE(user_id, mission_id, started_at)
+);
+
+
+### Upgrades Table
+
+sql
+CREATE TABLE upgrades (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name VARCHAR(100) NOT NULL,
+    description TEXT NOT NULL,
+    category VARCHAR(20) NOT NULL CHECK (category IN ('Hardware', 'Software', 'Security', 'Network')),
+    base_cost INTEGER NOT NULL,
+    max_level INTEGER NOT NULL DEFAULT 5,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+
+### UserUpgrades Table
+
+sql
+CREATE TABLE user_upgrades (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    upgrade_id UUID NOT NULL REFERENCES upgrades(id) ON DELETE CASCADE,
+    level INTEGER NOT NULL DEFAULT 1,
+    purchased_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    last_upgraded_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    UNIQUE(user_id, upgrade_id)
+);
+
+
+### UpgradeEffects Table
+
+sql
+CREATE TABLE upgrade_effects (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    upgrade_id UUID NOT NULL REFERENCES upgrades(id) ON DELETE CASCADE,
+    level INTEGER NOT NULL,
+    effect_type VARCHAR(50) NOT NULL,
+    effect_value INTEGER NOT NULL,
+    UNIQUE(upgrade_id, level, effect_type)
+);
+
+
+### SecuritySystems Table
+
+sql
+CREATE TABLE security_systems (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name VARCHAR(100) NOT NULL,
+    description TEXT NOT NULL,
+    base_cost INTEGER NOT NULL,
+    max_level INTEGER NOT NULL DEFAULT 5,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+
+### UserSecuritySystems Table
+
+sql
+CREATE TABLE user_security_systems (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    security_system_id UUID NOT NULL REFERENCES security_systems(id) ON DELETE CASCADE,
+    level INTEGER NOT NULL DEFAULT 1,
+    status VARCHAR(20) NOT NULL CHECK (status IN ('Active', 'Inactive', 'Compromised')),
+    effectiveness INTEGER NOT NULL DEFAULT 50,
+    purchased_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    last_upgraded_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    UNIQUE(user_id, security_system_id)
+);
+
+
+### Vulnerabilities Table
+
+sql
+CREATE TABLE vulnerabilities (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    name VARCHAR(100) NOT NULL,
+    description TEXT NOT NULL,
+    risk VARCHAR(20) NOT NULL CHECK (risk IN ('Low', 'Medium', 'High', 'Critical')),
+    status VARCHAR(20) NOT NULL CHECK (status IN ('Unresolved', 'Resolved')),
+    fix_cost INTEGER NOT NULL,
+    detected_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    resolved_at TIMESTAMP WITH TIME ZONE
+);
+
+
+### PvPAttacks Table
+
+sql
+CREATE TABLE pvp_attacks (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    attacker_id UUID NOT NULL REFERENCES users(id),
+    defender_id UUID NOT NULL REFERENCES users(id),
+    result VARCHAR(20) NOT NULL CHECK (result IN ('Success', 'Failed')),
+    crypto_stolen INTEGER DEFAULT 0,
+    reputation_change INTEGER DEFAULT 0,
+    attack_timestamp TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    CHECK (attacker_id != defender_id)
+);
+
+
+### SecurityLogs Table
+
+sql
+CREATE TABLE security_logs (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    log_type VARCHAR(20) NOT NULL CHECK (log_type IN ('Intrusion', 'Scan', 'Defense', 'System')),
+    message TEXT NOT NULL,
+    severity VARCHAR(20) NOT NULL CHECK (severity IN ('Low', 'Medium', 'High', 'Critical')),
+    is_resolved BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    resolved_at TIMESTAMP WITH TIME ZONE
+);
+
+
+### Transactions Table
+
+sql
+CREATE TABLE transactions (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    amount INTEGER NOT NULL,
+    transaction_type VARCHAR(50) NOT NULL,
+    description TEXT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    reference_id UUID, -- Can reference mission_id, upgrade_id, etc.
+    reference_type VARCHAR(50) -- 'Mission', 'Upgrade', 'PvP', etc.
+);
+
+
+### Notifications Table
+
+sql
+CREATE TABLE notifications (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    title VARCHAR(100) NOT NULL,
+    message TEXT NOT NULL,
+    notification_type VARCHAR(50) NOT NULL,
+    is_read BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    read_at TIMESTAMP WITH TIME ZONE
+);
+
+
+### NotificationSettings Table
+
+sql
+CREATE TABLE notification_settings (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    email_notifications BOOLEAN DEFAULT TRUE,
+    security_alerts BOOLEAN DEFAULT TRUE,
+    marketing_emails BOOLEAN DEFAULT FALSE,
+    game_updates BOOLEAN DEFAULT TRUE,
+    community_messages BOOLEAN DEFAULT TRUE,
+    UNIQUE(user_id)
+);
+
+
+### Achievements Table
+
+sql
+CREATE TABLE achievements (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    title VARCHAR(100) NOT NULL,
+    description TEXT NOT NULL,
+    requirement TEXT NOT NULL,
+    reward_amount INTEGER NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+
+### UserAchievements Table
+
+sql
+CREATE TABLE user_achievements (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    achievement_id UUID NOT NULL REFERENCES achievements(id) ON DELETE CASCADE,
+    progress INTEGER DEFAULT 0,
+    is_completed BOOLEAN DEFAULT FALSE,
+    completed_at TIMESTAMP WITH TIME ZONE,
+    UNIQUE(user_id, achievement_id)
+);
+
+
+### Sessions Table
+
+sql
+CREATE TABLE sessions (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    token VARCHAR(255) NOT NULL UNIQUE,
+    ip_address VARCHAR(45),
+    user_agent TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    is_active BOOLEAN DEFAULT TRUE
+);
+
+
+## Application Routes
+
+### Authentication Routes
+
+POST   /api/auth/register                # Register a new user
+POST   /api/auth/login                   # Login
+POST   /api/auth/logout                  # Logout
+POST   /api/auth/refresh-token           # Refresh JWT token
+POST   /api/auth/forgot-password         # Request password reset
+POST   /api/auth/verify-reset-code       # Verify reset code
+POST   /api/auth/reset-password          # Reset password
+POST   /api/auth/enable-2fa              # Enable two-factor authentication
+POST   /api/auth/verify-2fa              # Verify 2FA code
+GET    /api/auth/sessions                # Get all active sessions
+DELETE /api/auth/sessions/:id            # Revoke a specific session
+
+
+### User Routes
+
+GET    /api/users/me                     # Get current user profile
+PUT    /api/users/me                     # Update current user profile
+GET    /api/users/me/stats               # Get current user stats
+PUT    /api/users/avatar                 # Update user avatar
+DELETE /api/users/me                     # Delete user account
+
+
+### Mission Routes
+
+GET    /api/missions                     # Get all available missions
+GET    /api/missions/:id                 # Get mission details
+POST   /api/missions/:id/start           # Start a mission
+POST   /api/missions/:id/complete        # Complete a mission
+POST   /api/missions/:id/abort           # Abort a mission
+GET    /api/missions/history             # Get user mission history
+GET    /api/missions/active              # Get user's active mission
+
+
+### Upgrade Routes
+
+GET    /api/upgrades                     # Get all available upgrades
+GET    /api/upgrades/:id                 # Get upgrade details
+POST   /api/upgrades/:id/purchase        # Purchase an upgrade
+POST   /api/upgrades/:id/upgrade         # Upgrade to next level
+GET    /api/upgrades/user                # Get user's purchased upgrades
+
+
+### Security Routes
+
+GET    /api/security/systems             # Get all security systems
+GET    /api/security/systems/:id         # Get security system details
+POST   /api/security/systems/:id/purchase # Purchase a security system
+POST   /api/security/systems/:id/upgrade # Upgrade a security system
+GET    /api/security/vulnerabilities     # Get user vulnerabilities
+POST   /api/security/vulnerabilities/:id/fix # Fix a vulnerability
+POST   /api/security/scan                # Run a security scan
+GET    /api/security/logs                # Get security logs
+
+
+### PvP Routes
+
+GET    /api/pvp/targets                  # Get available PvP targets
+POST   /api/pvp/attack/:userId           # Attack another player
+GET    /api/pvp/history                  # Get PvP attack history
+GET    /api/pvp/leaderboard              # Get PvP leaderboard
+
+
+### Transaction Routes
+
+GET    /api/transactions                 # Get user transactions
+GET    /api/transactions/:id             # Get transaction details
+POST   /api/transactions/withdraw        # Withdraw crypto (Web3)
+POST   /api/transactions/deposit         # Deposit crypto (Web3)
+
+
+### Notification Routes
+
+GET    /api/notifications                # Get user notifications
+PUT    /api/notifications/:id/read       # Mark notification as read
+PUT    /api/notifications/read-all       # Mark all notifications as read
+GET    /api/notifications/settings       # Get notification settings
+PUT    /api/notifications/settings       # Update notification settings
+
+
+### Achievement Routes
+
+GET    /api/achievements                 # Get all achievements
+GET    /api/achievements/user            # Get user achievements
+GET    /api/achievements/:id             # Get achievement details
+
+
+### Leaderboard Routes
+
+GET    /api/leaderboard                  # Get global leaderboard
+GET    /api/leaderboard/weekly           # Get weekly leaderboard
+GET    /api/leaderboard/missions         # Get missions leaderboard
+GET    /api/leaderboard/pvp              # Get PvP leaderboard
+
+
+### Web3 Routes
+
+POST   /api/web3/connect-wallet          # Connect crypto wallet
+GET    /api/web3/wallet-info             # Get wallet information
+GET    /api/web3/nfts                    # Get user NFTs
+POST   /api/web3/mint-nft                # Mint a new NFT
+
+
+### Admin Routes
+
+GET    /api/admin/users                  # Get all users
+GET    /api/admin/users/:id              # Get user details
+PUT    /api/admin/users/:id              # Update user
+DELETE /api/admin/users/:id              # Delete user
+GET    /api/admin/missions               # Get all missions
+POST   /api/admin/missions               # Create new mission
+PUT    /api/admin/missions/:id           # Update mission
+DELETE /api/admin/missions/:id           # Delete mission
+GET    /api/admin/stats                  # Get game statistics
+
+
+### Page Routes
+
+GET    /                                 # Home page
+GET    /login                            # Login page
+GET    /register                         # Register page
+GET    /reset-password                   # Reset password page
+GET    /dashboard                        # Dashboard page
+GET    /missions                         # Missions page
+GET    /upgrades                         # Upgrades page
+GET    /security                         # Security page
+GET    /pvp                              # PvP page
+GET    /leaderboard                      # Leaderboard page
+GET    /profile                          # User profile page
+GET    /account-settings                 # Account settings page
+GET    /about                            # About page
+GET    /features                         # Features page
+GET    /community                        # Community page
+GET    /how-to-play                      # How to play page
+
+
+## Database Relationships Explained
+
+1. **Users to UserStats**: One-to-one relationship - each user has one set of stats
+2. **Users to Upgrades**: One-to-many relationship - users can own multiple upgrades
+3. **Users to SecuritySystems**: One-to-many relationship - users can have multiple security systems
+4. **Users to Missions**: One-to-many relationship - users can complete multiple missions
+5. **Users to PvPAttacks**: One-to-many relationship - users can initiate or defend in multiple PvP attacks
+6. **Users to Transactions**: One-to-many relationship - users can have multiple transactions
+7. **Users to Notifications**: One-to-many relationship - users can receive multiple notifications
+8. **Users to Achievements**: One-to-many relationship - users can earn multiple achievements
+9. **Missions to MissionRewards**: One-to-many relationship - missions can give multiple types of rewards
+10. **Upgrades to UpgradeEffects**: One-to-many relationship - upgrades can have multiple effects at different levels
+11. **SecuritySystems to Vulnerabilities**: One-to-many relationship - security systems can have multiple vulnerabilities
