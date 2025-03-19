@@ -3,6 +3,7 @@ package database
 import (
 	"log"
 	"os"
+	"time"
 
 	"github.com/fasiiha/hacker-tycoon/api/models"
 	"gorm.io/driver/postgres"
@@ -14,15 +15,6 @@ var DB *gorm.DB
 
 // InitDB initializes the database connection
 func InitDB() {
-
-	// dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
-	// 	os.Getenv("DB_HOST"),
-	// 	os.Getenv("DB_PORT"),
-	// 	os.Getenv("DB_USER"),
-	// 	os.Getenv("DB_PASSWORD"),
-	// 	os.Getenv("DB_NAME"),
-	// 	os.Getenv("DB_SSL_MODE"),
-	// )
 	databaseURL := os.Getenv("DATABASE_URL")
 	if databaseURL == "" {
 		log.Fatalf("DATABASE_URL environment variable not set")
@@ -38,8 +30,9 @@ func InitDB() {
 
 	log.Println("Connected to database successfully")
 
-	// Auto migrate the schema
-	migrateDB()
+	if !checkMigrations() {
+		migrateDB()
+	}
 }
 
 // CloseDB closes the database connection
@@ -85,5 +78,29 @@ func migrateDB() {
 		log.Fatalf("Failed to migrate database: %v", err)
 	}
 	
+	recordMigration()
+
 	log.Println("Database migrations completed successfully")
+}
+
+func checkMigrations() bool {
+	// Check if the migrations table exists and contains entries
+	var count int64
+	if err := DB.Table("migrations").Count(&count).Error; err != nil {
+		log.Printf("Error checking migrations: %v", err)
+		return false
+	}
+
+	return count > 0
+}
+
+// recordMigration records the migration in the database
+func recordMigration() {
+	// Add an entry in the migrations table to mark the migration as applied
+	if err := DB.Create(&models.Migration{
+		
+		Timestamp: time.Now(),
+	}).Error; err != nil {
+		log.Printf("Error recording migration: %v", err)
+	}
 }

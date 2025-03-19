@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"log"
 	"net/http"
 	"time"
 
@@ -65,10 +66,12 @@ func Register(c *gin.Context) {
 
 	// Hash password
 	hashedPassword, err := utils.HashPassword(req.Password)
+	log.Println("req.Password: ", req.Password)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to hash password"})
 		return
 	}
+	log.Println("hashedPassword: ", hashedPassword)
 
 	// Create user
 	user := models.User{
@@ -83,6 +86,7 @@ func Register(c *gin.Context) {
 	// Save user
 	if err := tx.Create(&user).Error; err != nil {
 		tx.Rollback()
+		log.Printf("User creation error: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create user"})
 		return
 	}

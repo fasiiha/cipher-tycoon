@@ -7,6 +7,11 @@ import (
 	"gorm.io/gorm"
 )
 
+type Migration struct {
+	ID                   uuid.UUID  `gorm:"type:uuid;primary_key;default:uuid_generate_v4()" json:"id"`
+	Timestamp 			time.Time 	`gorm:"default:CURRENT_TIMESTAMP"`
+}
+
 type User struct {
 	ID                   uuid.UUID  `gorm:"type:uuid;primary_key;default:uuid_generate_v4()" json:"id"`
 	Username             string     `gorm:"type:varchar(50);unique;not null" json:"username"`
@@ -251,6 +256,13 @@ type Session struct {
 }
 
 // BeforeCreate will set a UUID rather than numeric ID for all models
+func (u *Migration) BeforeCreate(tx *gorm.DB) error {
+	if u.ID == uuid.Nil {
+		u.ID = uuid.New()
+	}
+	return nil
+}
+
 func (u *User) BeforeCreate(tx *gorm.DB) error {
 	if u.ID == uuid.Nil {
 		u.ID = uuid.New()
