@@ -169,6 +169,7 @@ func Login(c *gin.Context) {
 	}
 
 	if err := database.DB.Create(&session).Error; err != nil {
+		log.Printf("Failed to create session: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create session"})
 		return
 	}

@@ -31,7 +31,11 @@ func main() {
 
 	// Configure CORS
 	config := cors.DefaultConfig()
-	config.AllowOrigins = []string{os.Getenv("FRONTEND_URL")}
+	config.AllowOrigins = []string{
+		os.Getenv("FRONTEND_URL"),
+		os.Getenv("ADMIN_FRONTEND_URL"),
+	}
+	
 	config.AllowCredentials = true
 	config.AllowHeaders = append(config.AllowHeaders, "Authorization")
 	router.Use(cors.New(config))
